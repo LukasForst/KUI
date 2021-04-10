@@ -6,7 +6,7 @@ import os
 import time
 import sys
 
-from mdp_agent import find_policy_via_value_iteration
+from mdp_agent import find_policy_via_value_iteration, find_policy_via_policy_iteration
 
 MAP = 'maps/easy/easy1.bmp'
 MAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), MAP)
@@ -114,9 +114,9 @@ def init_utils(problem):
     return utils
 
 
-def find_policy_via_policy_iteration(problem,discount_factor):
-    policy = init_policy(problem)
-    return(policy)
+# def find_policy_via_policy_iteration(problem,discount_factor):
+#     policy = init_policy(problem)
+#     return(policy)
 
 if __name__ == "__main__":
     # Initialize the maze environment
@@ -133,7 +133,8 @@ if __name__ == "__main__":
 
     print(env.get_all_states())
     # policy1 = find_policy_via_value_iteration(env)
-    policy = find_policy_via_value_iteration(env, discount_factor=0.9, epsilon=0.1)
+    policy = find_policy_via_policy_iteration(env, discount_factor=0.3)
+    # policy = find_policy_via_value_iteration(env, discount_factor=0.9, epsilon=0.1)
     # policy = find_policy_via_policy_iteration(env,0.9999)
     env.visualise(get_visualisation_values(policy))
     env.render()
