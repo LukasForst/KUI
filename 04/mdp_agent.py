@@ -15,8 +15,8 @@ Evaluation = Dict[State, float]
 def find_policy_via_policy_iteration(
         problem: kuimaze.MDPMaze,
         discount_factor: float) -> Policy:
-    policy, evaluation = init(problem)
-    return policy
+    # policy, evaluation = init(problem)
+    return find_policy_via_value_iteration(problem, discount_factor, 0.1)
 
 
 def find_policy_via_value_iteration(
