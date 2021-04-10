@@ -6,6 +6,7 @@ import os
 import time
 import sys
 
+from mdp_agent import find_policy_via_value_iteration
 
 MAP = 'maps/easy/easy1.bmp'
 MAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), MAP)
@@ -132,12 +133,11 @@ if __name__ == "__main__":
 
     print(env.get_all_states())
     # policy1 = find_policy_via_value_iteration(env)
-    policy = find_policy_via_policy_iteration(env,0.9999)
+    policy = find_policy_via_value_iteration(env, discount_factor=0.9, epsilon=0.01)
+    # policy = find_policy_via_policy_iteration(env,0.9999)
     env.visualise(get_visualisation_values(policy))
     env.render()
-    wait_n_or_s()
+
     print('Policy:', policy)
-    utils = init_utils(env)
-    env.visualise(get_visualisation_values(utils))
-    env.render()
-    time.sleep(5)
+    input('end')
+    # time.sleep(5)
