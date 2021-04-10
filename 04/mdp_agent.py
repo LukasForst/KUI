@@ -1,3 +1,4 @@
+import math
 import random
 from typing import Dict, Tuple
 
@@ -43,18 +44,21 @@ def run_value_iteration(
         if problem.is_goal_state(state):
             continue
 
-        best_action, best_evaluation = policy[state.x, state.y], evaluation[state.x, state.y]
+        best_action, best_evaluation = policy[state.x, state.y], -math.inf
         for action in problem.get_actions(state):
             action_eval = 0
             for outcome, probability in problem.get_next_states_and_probs(state, action):
                 action_eval += probability * evaluation[outcome.x, outcome.y]
 
             if best_evaluation < action_eval:
-                change = max(change, action_eval - best_evaluation)
                 best_action, best_evaluation = action, action_eval
 
         policy[state.x, state.y] = best_action
-        evaluation[state.x, state.y] = state.reward + discount_factor * best_evaluation
+        new_eval = state.reward + discount_factor * best_evaluation
+
+        change = max(change, abs(new_eval - evaluation[state.x, state.y]))
+        evaluation[state.x, state.y] = new_eval
+
     return change
 
 
