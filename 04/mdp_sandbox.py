@@ -133,8 +133,8 @@ if __name__ == "__main__":
 
     print(env.get_all_states())
     # policy1 = find_policy_via_value_iteration(env)
-    policy = find_policy_via_policy_iteration(env, discount_factor=0.3)
-    # policy = find_policy_via_value_iteration(env, discount_factor=0.9, epsilon=0.1)
+    # policy = find_policy_via_policy_iteration(env, discount_factor=0.3)
+    policy = find_policy_via_value_iteration(env, discount_factor=0.9, epsilon=0.1)
     # policy = find_policy_via_policy_iteration(env,0.9999)
     env.visualise(get_visualisation_values(policy))
     env.render()
