@@ -16,6 +16,8 @@ import gym
 
 
 # MAP = 'maps/normal/normal3.bmp'
+from rl_agent import learn_policy
+
 MAP = 'maps/easy/easy2.bmp'
 MAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), MAP)
 # PROBS = [0.8, 0.1, 0.1, 0]
@@ -141,7 +143,9 @@ if __name__ == "__main__":
     if VERBOSITY > 0:
         env.visualise(get_visualisation(q_table))
         env.render()
-    walk_randomly(env)
+
+    learn_policy(env)
+    # walk_randomly(env)
 
     if VERBOSITY > 0:
         SKIP = False

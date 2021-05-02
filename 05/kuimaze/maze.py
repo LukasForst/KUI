@@ -549,7 +549,7 @@ class Maze:
         @type drawed_nodes: list of lists of the same dimensions as problem or boolean or None
         '''
         assert (self.__player is not None)
-        if self.show_level is not SHOW.NONE:
+        if self.show_level != SHOW.NONE:
             first_run = False
             if not self.__gui_setup:
                 self.__setup_gui()
@@ -581,7 +581,7 @@ class Maze:
         @param full_path: path_section in a form of list of consecutive L{namedtuples path_section<path_section>}
         @type full_path: list of consecutive L{namedtuples path_section<path_section>}
         '''
-        if self.show_level is not SHOW.NONE and len(full_path) is not 0:
+        if self.show_level != SHOW.NONE and len(full_path) is not 0:
             def coord_gen(paths):
                 paths.append(path_section(paths[-1].state_to, None, None, None))
                 for item in paths:
@@ -614,7 +614,7 @@ class Maze:
             self.__show_tkinter.set(show_level.value)
             coords = [c for i, c in self.__drawn_lines]
             self.show_and_break()
-            if self.show_level is not SHOW.NONE:
+            if self.show_level != SHOW.NONE:
                 self.__drawn_lines = []
                 for coord in coords:
                     self.__drawn_lines.append((self.__gui_canvas.create_line(
