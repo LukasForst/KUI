@@ -97,7 +97,7 @@ def init_policy(problem):
 def init_utils(problem):
     '''
     Initialize all state utilities to zero except the goal states
-    :param problem: problem - object, for us it will be kuimaze.Maze object
+    :param problem: env - object, for us it will be kuimaze.Maze object
     :return: dictionary of utilities, indexed by state coordinates
     '''
     utils = dict()
@@ -109,7 +109,7 @@ def init_utils(problem):
             utils[(x,y)] = 0
 
     for state in problem.get_all_states():
-        utils[(state.x, state.y)] = state.reward # problem.get_state_reward(state)
+        utils[(state.x, state.y)] = state.reward # env.get_state_reward(state)
     return utils
 
 

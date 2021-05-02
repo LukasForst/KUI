@@ -34,7 +34,7 @@ state = collections.namedtuple('State', ['x', 'y'])
 path_section = collections.namedtuple('Path', ['state_from', 'state_to', 'cost', 'action'])
 
 # constants used for GUI drawing
-#: Maximum size of one cell in GUI in pixels. If problem is too large to fit on screen, the cell size will be smaller
+#: Maximum size of one cell in GUI in pixels. If env is too large to fit on screen, the cell size will be smaller
 MAX_CELL_SIZE = 200
 #: Maximal percentage of smaller screen size, GUI window can occupy.
 MAX_WINDOW_PERCENTAGE = 0.85
@@ -186,7 +186,7 @@ class Maze:
         '''
         Parameters node_rewards, path_costs and trans_probs are meant for defining more complicated mazes. Parameter start_node redefines start state completely, parameter goal_nodes will add nodes to a list of goal nodes.
 
-        @param image: path_section to an image file describing problem. Expects to find RGB image in given path_section
+        @param image: path_section to an image file describing env. Expects to find RGB image in given path_section
 
             white color - empty space
 
@@ -197,16 +197,16 @@ class Maze:
             blue color - start state
         @type image: string
         @keyword node_rewards: optional setting of state rewards. If not set, or incorrect input, it will be set to default value - all nodes have reward of zero.
-        @type node_rewards: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y) where (x, y) is shape of problem.
+        @type node_rewards: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y) where (x, y) is shape of env.
         @keyword path_costs: optional setting of path_section costs. If not set, or incorrect input, it will be set to default value - all paths have cost of one.
-        @type path_costs: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y, 2) where (x, y) is shape of problem.
+        @type path_costs: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y, 2) where (x, y) is shape of env.
         @keyword trans_probs: optional setting of transition probabilities for modelling MDP. If not set, or incorrect input, it will be set to default value - actions have probability of 1 for itself and 0 for any other.
-        @type trans_probs: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y, 4, 4) where (x, y) is shape of problem.
+        @type trans_probs: either string pointing to stored numpy.ndarray or numpy.ndarray itself or None for default value. Shape of numpy.ndarray must be (x, y, 4, 4) where (x, y) is shape of env.
         @keyword show_level: Controlling level of displaying in GUI.
         @type show_level: L{kuimaze.SHOW}
-        @keyword start_node: Redefining start state. Must be a valid state inside a problem without a wall.
+        @keyword start_node: Redefining start state. Must be a valid state inside a env without a wall.
         @type start_node: L{namedtuple state<state>} or None for default start state loaded from image.
-        @keyword goal_nodes: Appending to a list of goal nodes. Must be valid nodes inside a problem without a wall.
+        @keyword goal_nodes: Appending to a list of goal nodes. Must be valid nodes inside a env without a wall.
         @type goal_nodes: iterable of L{namedtuples state<state>} or None for default set of goal nodes loaded from image.
 
         @raise AssertionError: When image is not RGB image or if show is not of type L{kuimaze.SHOW} or if initialization didn't finish correctly.
@@ -369,7 +369,7 @@ class Maze:
 
     def get_all_states(self):
         '''
-        Returns a list of all the problem states
+        Returns a list of all the env states
         @return: list of all states
         @rtype: list of L{namedtuple weighted_state<weighted_state>}
         '''
@@ -383,8 +383,8 @@ class Maze:
 
     def get_dimensions(self):
         '''
-        Returns dimensions of problem
-        @return: x and y dimensions of problem. Note that state indices are zero-based so if returned dimensions are (5, 5), state (5, 5) is B{not} inside problem.
+        Returns dimensions of env
+        @return: x and y dimensions of env. Note that state indices are zero-based so if returned dimensions are (5, 5), state (5, 5) is B{not} inside env.
         @rtype: tuple
         '''
         return self.__maze.shape
@@ -394,7 +394,7 @@ class Maze:
         Generate (yield) actions possible for the current_state
         It does not check the outcome this is left to the result method
         @param current_state:
-        @return: action (relevant for the problem - problem in this case)
+        @return: action (relevant for the env - env in this case)
         @rtype: L{action from ACTION<ACTION>}
         '''
         for action in ACTION:
@@ -466,10 +466,10 @@ class Maze:
 
     def __is_inside(self, current_state):
         '''
-        Check whether a state is inside a problem
+        Check whether a state is inside a env
         @param current_state: state to check
         @type current_state: L{namedtuple state<state>}
-        @return: True if state is inside problem, False otherwise
+        @return: True if state is inside env, False otherwise
         @rtype: boolean
         '''
         dims = self.get_dimensions()
@@ -477,10 +477,10 @@ class Maze:
 
     def __is_inside_valid(self, current_state):
         '''
-        Check whether a state is inside a problem and is not a wall
+        Check whether a state is inside a env and is not a wall
         @param current_state: state to check
         @type current_state: L{namedtuple state<state>}
-        @return: True if state is inside problem and is not a wall, False otherwise
+        @return: True if state is inside env and is not a wall, False otherwise
         @rtype: boolean
         '''
         return self.__is_inside(current_state) and self.__maze[current_state.x, current_state.y]
@@ -513,7 +513,7 @@ class Maze:
 
     def set_player(self, player):
         '''
-        Set player associated with this problem.
+        Set player associated with this env.
         @param player: player to be used for association
         @type player: L{BaseAgent<kuimaze.BaseAgent>} or its descendant
         @raise AssertionError: if player is not instance of L{BaseAgent<kuimaze.BaseAgent>} or its descendant
@@ -538,15 +538,15 @@ class Maze:
         code down a lot.
 
         You can optionally set parameter C{drawed_nodes} to a list of lists of dimensions corresponding to dimensions of
-        problem and if show_level is higher or equal to L{SHOW.NODE_REWARDS}, it will plot those in state centers
+        env and if show_level is higher or equal to L{SHOW.NODE_REWARDS}, it will plot those in state centers
         instead of state rewards.
         If this parameter is left unset, no redrawing of texts in center of nodes is issued, however, it can be set to
-        True which will draw node_rewards saved in the problem.
+        True which will draw node_rewards saved in the env.
 
         If show_level is L{SHOW.NONE}, thisets function has no effect
 
         @param drawed_nodes: custom objects convertible to string to draw to center of nodes or True or None
-        @type drawed_nodes: list of lists of the same dimensions as problem or boolean or None
+        @type drawed_nodes: list of lists of the same dimensions as env or boolean or None
         '''
         assert (self.__player is not None)
         if self.show_level != SHOW.NONE:
@@ -702,7 +702,7 @@ class Maze:
 
     def __renew_gui(self):
         '''
-        Renew GUI if a new player connects to a problem object.
+        Renew GUI if a new player connects to a env object.
         '''
         #self.__destroy_gui()
         self.__has_triangles = False
@@ -756,17 +756,17 @@ class Maze:
 
     def __get_cell_center_coords(self, x, y):
         '''
-        Mapping from problem coordinates to GUI coordinates.
-        @param x: x coord in problem
-        @param y: y coord in problem
+        Mapping from env coordinates to GUI coordinates.
+        @param x: x coord in env
+        @param y: y coord in env
         @return: (x, y) coordinates in GUI (centers of cells)
         '''
         return self.__get_cell_center(x), self.__get_cell_center(y)
 
     def __get_cell_center(self, x):
         '''
-        Mapping from problem coordinate to GUI coordinate, only one coord.
-        @param x: coord in problem (could be either x or y)
+        Mapping from env coordinate to GUI coordinate, only one coord.
+        @param x: coord in env (could be either x or y)
         @return: center of cell corresponding to such coordinate in GUI
         '''
         return BORDER_SIZE + self.__cell_size * (x + 1.5)
@@ -817,14 +817,14 @@ class Maze:
 
     def visualise(self, dictionary):
         '''
-        Update state rewards in GUI. If drawed_nodes is passed and is not None, it is expected to be list of lists of objects with string representation of same dimensions as the problem. Might fail on IndexError if passed list is smaller.
+        Update state rewards in GUI. If drawed_nodes is passed and is not None, it is expected to be list of lists of objects with string representation of same dimensions as the env. Might fail on IndexError if passed list is smaller.
         if one of these objects in list is None, then no text is printed.
 
         If drawed_nodes is None, then node_rewards saved in Maze objects are printed instead
 
         @param drawed_nodes: list of lists of objects to be printed in GUI instead of state rewards
         @type drawed_nodes: list of lists of appropriate dimensions or None
-        @raise IndexError: if drawed_nodes parameter doesn't match dimensions of problem
+        @raise IndexError: if drawed_nodes parameter doesn't match dimensions of env
         '''
         dims = self.get_dimensions()
 

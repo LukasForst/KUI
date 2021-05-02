@@ -21,12 +21,12 @@ class BaseAgent:
 
     def __init__(self, problem):
         '''
-        All inherited players must call this method. Expects problem to be instance of L{kuimaze.Maze}.
-        If problem has L{show_level<kuimaze.SHOW>} other than L{kuimaze.SHOW.NONE}, it will start a GUI automatically.
+        All inherited players must call this method. Expects env to be instance of L{kuimaze.Maze}.
+        If env has L{show_level<kuimaze.SHOW>} other than L{kuimaze.SHOW.NONE}, it will start a GUI automatically.
 
         @param problem: Maze to associate your player with:
         @type problem: L{Maze}
-        @raise AssertionError: if problem is not an instance of L{Maze}
+        @raise AssertionError: if env is not an instance of L{Maze}
         '''
         assert(isinstance(problem, kuimaze.maze.Maze))
         self.problem = problem

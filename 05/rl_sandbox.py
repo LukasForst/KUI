@@ -7,14 +7,12 @@ A sandbox for playing with the HardMaze
 @copyright: (c) 2017, 2018
 '''
 
+import os
+import sys
+
+import numpy as np
 
 import kuimaze
-import numpy as np
-import sys
-import os
-import gym
-
-
 # MAP = 'maps/normal/normal3.bmp'
 from rl_agent import learn_policy
 
@@ -30,11 +28,11 @@ GRID_WORLD3 = [[[255, 255, 255], [255, 255, 255], [255, 255, 255], [255, 0, 0]],
                [[255, 255, 255], [0, 0, 0], [255, 255, 255], [0, 255, 0]],
                [[0, 0, 255], [255, 255, 255], [255, 255, 255], [255, 255, 255]]]
 
+
 # MAP = GRID_WORLD3
 
 
 def wait_n_or_s():
-
     def wait_key():
         """
         returns key pressed ... works only in terminal! NOT in IDE!
@@ -127,7 +125,7 @@ if __name__ == "__main__":
         print('press n - next')
         print('press s - skip to end')
         print('====================')
-    
+
     '''
     Define constants:
     '''
@@ -144,7 +142,8 @@ if __name__ == "__main__":
         env.visualise(get_visualisation(q_table))
         env.render()
 
-    learn_policy(env)
+    policy = learn_policy(env)
+    print(policy)
     # walk_randomly(env)
 
     if VERBOSITY > 0:
