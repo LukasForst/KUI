@@ -1,0 +1,8 @@
+name: kui-06
+dependencies:
+  - pandas
+  - scipy
+  - numpy
+  - jupyter
+  - matplotlib
+  - scikit-learn
