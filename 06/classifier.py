@@ -121,10 +121,13 @@ class Bayes:
             es = np.exp(-((single_x - self.mean[c]) ** 2) / (2 * self.variance[c]))
             # and now we have P(image | class)
             p_image_class = dst * es
-            # and we compute the final probability
-            # this gives us better results then with + np.log(self.class_probability[c])
-            # meaning that when we assume that all classes have same probability in the dataset
-            # we get the better results on the testing data sets
+            # and we compute the final probability -> we use smoothing, because
+            # currently we're multiplying together potentially very small values
+            # which is not great with floating point numbers -> however,
+            # class maximizing P also maximizes log(P) so we can switch to using log probabilities
+            # another "hack" we made here is that we do not add "+ np.log(self.class_probability[c])"
+            # as we assume that all classes have same probability in the dataset (which might or not might be true,
+            # but it gives us better results on data provided by the teachers)
             p_log = np.sum(np.log(p_image_class))
             # select higher probability
             if p_log > mx:
