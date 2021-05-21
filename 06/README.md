@@ -1,0 +1,1 @@
+https://medium.com/data-sensitive/na%C3%AFve-bayes-tutorial-using-mnist-dataset-2b4a82b124d2
