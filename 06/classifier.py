@@ -1,4 +1,6 @@
+import math
 import os
+from collections import defaultdict
 
 import numpy as np
 from PIL import Image, ImageOps
@@ -59,9 +61,51 @@ def run_kNN(train_path, test_paths, k):
     return model.predict(to_predict_images, k)
 
 
-def run_bayes(train_path, test_files):
-    # TODO program bayes
-    return run_kNN(train_path, test_files, None)
+class Bayes:
+    def __init__(self, X_train, y_train):
+        self.X_train = X_train
+        self.y_train = y_train
+        self.classes = np.unique(y_train)
+        self.n_s, self.n_f = X_train.shape
+        self.n_c = len(self.classes)
+
+        self.mean_v = defaultdict(lambda: np.zeros(self.n_f))
+        self.var_v = defaultdict(lambda: np.zeros(self.n_f))
+        self.c_prob = defaultdict(lambda: 0.0)
+        # this is here because otherwise we divide by zero
+        # so we add variance to all data
+        self.additional_variance = 1000
+
+        self.__train()
+
+    def __train(self):
+        for c in self.classes:
+            trainX_c = self.X_train[self.y_train == c]
+            self.c_prob[c] = len(trainX_c) / len(self.X_train)
+
+            self.mean_v[c] = trainX_c.mean(axis=0)
+            self.var_v[c] = trainX_c.var(axis=0) + self.additional_variance
+
+    def predict(self, single_x):
+        mx = -math.inf
+        probable_c = None
+        for c in self.classes:
+            numerator = np.exp(-((single_x - self.mean_v[c]) ** 2) / (2 * self.var_v[c]))
+            denominator = np.sqrt(2 * np.pi * (self.var_v[c]))
+            prob_xc = numerator / denominator
+            ratio = np.sum(np.log(prob_xc))
+            if ratio > mx:
+                mx = ratio
+                probable_c = c
+
+        return probable_c
+
+
+def run_bayes(train_path, test_paths):
+    images, labels = load_train_data(train_path)
+    b = Bayes(images, labels)
+    to_predict_images = np.array([load_img(file) for file in test_paths])
+    return [b.predict(img) for img in to_predict_images]
 
 
 if __name__ == '__main__':

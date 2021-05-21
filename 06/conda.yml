@@ -1,4 +1,6 @@
 name: kui-06
+channels:
+  - conda-forge
 dependencies:
   - pandas
   - scipy
@@ -7,3 +9,4 @@ dependencies:
   - matplotlib
   - scikit-learn
   - pillow
+  - keras
