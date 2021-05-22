@@ -1,0 +1,11 @@
+name: kui-07
+channels:
+  - conda-forge
+dependencies:
+  - pandas
+  - scipy
+  - numpy
+  - jupyter
+  - matplotlib
+  - scikit-learn
+  - pillow
